@@ -29,7 +29,7 @@ function generateBookObject(id, title, author, year, isCompleted){
 function addBook() {
     const bookTitle = document.getElementById('title').value;
     const bookAuthor = document.getElementById('author').value;
-    const bookYear = document.getElementById('year').value;
+    const bookYear = Number(document.getElementById('year').value); // convert from string into number
     const isCompleted = updateValue();
 
     const generatedId = generateId();
@@ -112,8 +112,12 @@ function makeBookShelf(bookObject) {
     container.append(textContainer);
     container.setAttribute('id', `book-${bookObject.id}`);
 
+    
+    let completedButton;
+    let uncompletedButton;
+
     if (bookObject.isCompleted) {
-        const uncompletedButton = document.createElement('button');
+        uncompletedButton = document.createElement('button');
         uncompletedButton.classList.add('uncompleted-button');
         const uncompletedButtonText = document.createTextNode('Belum Selesai');
         uncompletedButton.appendChild(uncompletedButtonText);
@@ -123,19 +127,9 @@ function makeBookShelf(bookObject) {
             moveToUncompletedBooks(bookObject.id);
         })
 
-        const removeButton = document.createElement('button');
-        removeButton.classList.add('remove-button');
-        const removeButtonText = document.createTextNode('Hapus');
-        removeButton.appendChild(removeButtonText);
-
-        // event ke function hapus
-        removeButton.addEventListener('click', function() {
-            removeBook(bookObject.id);
-        })
-
-        container.append(uncompletedButton, removeButton);
+        container.append(uncompletedButton);
     } else {
-        const completedButton = document.createElement('button');
+        completedButton = document.createElement('button');
         completedButton.classList.add('completed-button');
         const completedButtonText = document.createTextNode('Sudah Selesai');
         completedButton.appendChild(completedButtonText);
@@ -145,19 +139,21 @@ function makeBookShelf(bookObject) {
             moveToCompletedBooks(bookObject.id);
         })
 
-        const removeButton = document.createElement('button');
-        removeButton.classList.add('remove-button');
-        const removeButtonText = document.createTextNode('Hapus');
-        removeButton.appendChild(removeButtonText);
-
-        // event ke function hapus
-        removeButton.addEventListener('click', function() {
-            removeBook(bookObject.id);
-        })
-
-        container.append(completedButton, removeButton);
+        container.append(completedButton);
     }
 
+    const removeButton = document.createElement('button');
+    removeButton.classList.add('remove-button');
+    const removeButtonText = document.createTextNode('Hapus');
+    removeButton.appendChild(removeButtonText);
+
+    // event ke function hapus
+    removeButton.addEventListener('click', function() {
+        removeBook(bookObject.id);
+    })
+    
+    container.append(removeButton);
+    
     return container;
 }
 
@@ -217,20 +213,10 @@ document.addEventListener(RENDER_EVENT, function() {
         const bookElement = makeBookShelf(bookItem);
         if (!bookItem.isCompleted) {
             uncompletedBookList.append(bookElement);
-            completedButton.addEventListener('click', function() {
-                moveToCompletedBooks(bookObject.id);
-            })
-            removeButton.addEventListener('click', function() {
-                removeBook(bookObject.id);
-            })
+            
         } else {
             completedBookList.append(bookElement);
-            uncompletedButton.addEventListener('click', function() {
-                moveToUncompletedBooks(bookObject.id);
-            })
-            removeButton.addEventListener('click', function() {
-                removeBook(bookObject.id);
-            })
+            
         }
     }
 })
