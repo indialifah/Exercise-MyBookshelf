@@ -16,13 +16,13 @@ function generateId() {
     return +new Date();
 }
 
-function generateBookObject(id, title, author, year, isCompleted){
+function generateBookObject(id, title, author, year, isComplete){
     return {
         id,
         title,
         author,
         year,
-        isCompleted
+        isComplete
     }
 }
 
@@ -30,10 +30,10 @@ function addBook() {
     const bookTitle = document.getElementById('title').value;
     const bookAuthor = document.getElementById('author').value;
     const bookYear = Number(document.getElementById('year').value); // convert from string into number
-    const isCompleted = updateValue();
+    const isComplete = updateValue();
 
     const generatedId = generateId();
-    const bookObject = generateBookObject(generatedId, bookTitle, bookAuthor, bookYear, isCompleted);
+    const bookObject = generateBookObject(generatedId, bookTitle, bookAuthor, bookYear, isComplete);
     books.push(bookObject);
 
     console.log(bookObject);
@@ -47,7 +47,7 @@ function moveToCompletedBooks(bookId) {
 
     if (bookTarget == null) return;
 
-    bookTarget.isCompleted = true;
+    bookTarget.isComplete = true;
     document.dispatchEvent(new Event(RENDER_EVENT));
     saveData();
 }
@@ -57,7 +57,7 @@ function moveToUncompletedBooks(bookId) {
 
     if (bookTarget == null) return;
 
-    bookTarget.isCompleted = false;
+    bookTarget.isComplete = false;
     document.dispatchEvent(new Event(RENDER_EVENT));
     saveData();
 }
@@ -116,7 +116,7 @@ function makeBookShelf(bookObject) {
     let completedButton;
     let uncompletedButton;
 
-    if (bookObject.isCompleted) {
+    if (bookObject.isComplete) {
         uncompletedButton = document.createElement('button');
         uncompletedButton.classList.add('uncompleted-button');
         const uncompletedButtonText = document.createTextNode('Belum Selesai');
@@ -211,7 +211,7 @@ document.addEventListener(RENDER_EVENT, function() {
 
     for (const bookItem of books) {
         const bookElement = makeBookShelf(bookItem);
-        if (!bookItem.isCompleted) {
+        if (!bookItem.isComplete) {
             uncompletedBookList.append(bookElement);
             
         } else {
